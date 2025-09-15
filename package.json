@@ -1,0 +1,26 @@
+{
+  "name": "nihonmap",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "都道府県SVG日本地図ライブラリとデモ",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "fmt": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "happy-dom": "^20.10.2",
+    "prettier": "^3.3.0",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.0.0",
+    "vite": "^6.0.0",
+    "vitest": "^2.1.0"
+  }
+}
