@@ -95,29 +95,28 @@ body {
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 296px;
-  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 48px;
   max-width: 1120px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 32px 32px;
+  padding: 8px 32px 32px;
   flex: 1;
 }
 
 @media (max-width: 880px) {
   .layout {
     grid-template-columns: 1fr;
+    gap: 28px;
   }
 }
 
+/* 地図のまわりは箱で囲わず、罫線と余白で区切る */
 .map-pane {
-  background: var(--panel);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  min-width: 0;
 }
 
 /* コントロール */
@@ -128,6 +127,8 @@ body {
   align-items: center;
   gap: 16px 24px;
   font-size: 14px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
 }
 
 .segmented {
@@ -319,10 +320,18 @@ body {
 .legend {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px 16px;
   font-size: 12px;
   color: var(--muted);
   min-height: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.legend:empty {
+  border-top: 0;
+  padding-top: 0;
 }
 
 .legend .key {
@@ -340,25 +349,37 @@ body {
 
 /* 詳細パネル */
 
+/* 詳細は別カードにせず、左の罫線と余白で本文から切り分ける */
 .info-pane {
-  background: var(--panel);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  padding: 24px;
   align-self: start;
   position: sticky;
   top: 24px;
+  padding-left: 32px;
+  border-left: 1px solid var(--line);
+}
+
+@media (max-width: 880px) {
+  .info-pane {
+    position: static;
+    padding-left: 0;
+    padding-top: 28px;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
 }
 
 .info-pane .placeholder {
   font-size: 13px;
   color: var(--muted);
+  text-wrap: pretty;
 }
 
+/* 読みは見出しの上のキッカーとしてアクセント色で置く */
 .info-pane .kana {
   font-size: 12px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
+  color: var(--accent);
+  letter-spacing: 0.16em;
+  font-weight: 600;
 }
 
 .info-pane h2 {

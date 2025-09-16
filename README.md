@@ -83,8 +83,16 @@ prefectureByCode(13);
 //   en: 'Tokyo', region: '関東', rings: [...] }
 
 const scale = linearColorScale([0, 100], ['#dbe7f0', '#2f6695']);
-scale(50); // '#85a7c3'(等間隔)。quantizeColorScaleは離散n段階
+scale(50); // '#85a7c3'(連続)。quantizeColorScaleは値域を等間隔のn段階に割る
+
+// 人口のように裾の長い分布は、等間隔だと一部の色に偏る。
+// quantileColorScaleは標本のn分位で区切り、各階級の件数をほぼ均等にする
+const colors = ['#dbe7f0', '#aac8de', '#7da9cb', '#5187b3', '#2f6695'];
+const popScale = quantileColorScale(populations, colors);
+quantileBreaks(populations, colors.length); // 凡例に出す各階級の下限
 ```
+
+色スケールは3種類。`linearColorScale` は2色間の連続グラデーション、`quantizeColorScale` は値域を等間隔のn段階へ、`quantileColorScale` は標本の分布をn分位(等頻度)へ割る。デモの人口塗り分けは `quantileColorScale` を使っている。
 
 ### 手持ちのGeoJSONを重ねる
 

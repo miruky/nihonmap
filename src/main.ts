@@ -1,5 +1,12 @@
 import './style.css';
-import { JapanMap, prefectureFeatures, type MapMode, type PrefectureFeature } from './lib';
+import {
+  JapanMap,
+  prefectureFeatures,
+  quantileBreaks,
+  quantileColorScale,
+  type MapMode,
+  type PrefectureFeature,
+} from './lib';
 import { population2020 } from './demo/population';
 
 type Paint = 'population' | 'region' | 'plain';
@@ -17,19 +24,9 @@ const REGION_COLORS: Readonly<Record<string, string>> = {
 };
 
 // 人口は偏りが大きいので、等間隔ではなく等頻度(分位)で5階級に割る
-const sortedValues = prefectureFeatures
-  .map((p) => population2020[p.code] ?? 0)
-  .sort((a, b) => a - b);
-const popBreaks = POPULATION_COLORS.map(
-  (_, i) => sortedValues[Math.floor((sortedValues.length * i) / POPULATION_COLORS.length)] ?? 0,
-);
-function popColor(value: number): string {
-  let bucket = 0;
-  for (let i = 0; i < popBreaks.length; i += 1) {
-    if (value >= (popBreaks[i] ?? 0)) bucket = i;
-  }
-  return POPULATION_COLORS[bucket] ?? '';
-}
+const popValues = prefectureFeatures.map((p) => population2020[p.code] ?? 0);
+const popBreaks = quantileBreaks(popValues, POPULATION_COLORS.length);
+const popColor = quantileColorScale(popValues, POPULATION_COLORS);
 const popRank = new Map(
   [...prefectureFeatures]
     .sort((a, b) => (population2020[b.code] ?? 0) - (population2020[a.code] ?? 0))
