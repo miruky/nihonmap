@@ -1,29 +1,87 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
-    <meta name="description" content="依存ゼロの都道府県SVG日本地図ライブラリ nihonmap のデモ" />
+    <meta
+      name="description"
+      content="依存ゼロの都道府県SVG日本地図ライブラリ nihonmap のデモ。実形状とタイルグリッド、人口・人口密度の塗り分け、検索とSVG書き出し。"
+    />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <title>nihonmap - 都道府県SVG日本地図</title>
+    <title>nihonmap - 都道府県SVG日本地図ライブラリ</title>
+    <script>
+      // 描画前にテーマを確定してFOUCを防ぐ。JS有効の印も先に付ける。
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        try {
+          var pref = localStorage.getItem('nihonmap:theme');
+          if (pref !== 'light' && pref !== 'dark' && pref !== 'system') pref = 'system';
+          var dark =
+            pref === 'dark' ||
+            (pref === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+          d.dataset.theme = dark ? 'dark' : 'light';
+        } catch (e) {
+          d.dataset.theme = 'light';
+        }
+      })();
+    </script>
   </head>
   <body>
     <header class="site-header">
-      <svg class="site-logo" viewBox="0 0 32 32" aria-hidden="true">
-        <rect x="17" y="2" width="13" height="13" rx="4" class="logo-accent" />
-        <rect x="9" y="11" width="9" height="9" rx="3" fill="currentColor" opacity="0.7" />
-        <rect x="2" y="19" width="11" height="11" rx="3.5" fill="currentColor" opacity="0.4" />
-      </svg>
-      <div>
-        <h1>nihonmap</h1>
-        <p class="tagline">依存ゼロの都道府県SVG日本地図ライブラリ</p>
-      </div>
-      <a class="repo-link" href="https://github.com/miruky/nihonmap" rel="noreferrer">GitHub</a>
+      <a class="brand" href="https://github.com/miruky/nihonmap" rel="noreferrer">
+        <svg class="brand-logo" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="17" y="2" width="13" height="13" rx="4" class="logo-accent" />
+          <rect x="9" y="11" width="9" height="9" rx="3" fill="currentColor" opacity="0.7" />
+          <rect x="2" y="19" width="11" height="11" rx="3.5" fill="currentColor" opacity="0.4" />
+        </svg>
+        <span class="brand-name">nihonmap</span>
+      </a>
+      <nav class="site-nav">
+        <button id="theme-toggle" type="button" class="ghost-button">テーマ</button>
+        <a class="ghost-button" href="https://github.com/miruky/nihonmap" rel="noreferrer"
+          >GitHub</a
+        >
+      </nav>
     </header>
 
-    <main class="layout">
-      <section class="map-pane" aria-label="地図">
+    <main>
+      <section class="hero" data-reveal>
+        <p class="kicker">TypeScript / SVG / 実行時依存ゼロ</p>
+        <h1 class="hero-title">日本地図を、<br />ひとつの関数で描く。</h1>
+        <p class="hero-lede">
+          47都道府県の輪郭を整数座標で同梱し、実行時はSVG文字列を組み立てるだけ。実形状とタイルグリッドの2モード、コロプレス塗り分け、クリックとキーボードでの選択を、依存ゼロで提供する。
+        </p>
+        <ul class="hero-meta" aria-label="主な数値">
+          <li><span class="num">47</span><span class="num-label">都道府県</span></li>
+          <li><span class="num">53</span><span class="num-label">KBのデータ</span></li>
+          <li><span class="num">0</span><span class="num-label">実行時依存</span></li>
+        </ul>
+        <figure class="hero-figure">
+          <img
+            src="https://picsum.photos/seed/nihonmap-relief/1600/620"
+            alt=""
+            width="1600"
+            height="620"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>
+            全国の統計を1枚に落とし込むダッシュボードのための、軽量な地図エンジン。
+          </figcaption>
+        </figure>
+      </section>
+
+      <section class="tool" data-reveal aria-label="地図デモ">
+        <div class="section-head">
+          <p class="kicker">Interactive</p>
+          <h2>地図を触る</h2>
+          <p class="section-lede">
+            モードと塗り分けを切り替え、県を選ぶと右に詳細が出る。表示はそのままURLに残るので、リンクを開けば同じ地図が再現される。
+          </p>
+        </div>
+
         <div class="controls">
           <div class="segmented" role="group" aria-label="描画モード">
             <button type="button" data-mode="shape" aria-pressed="true">実形状</button>
@@ -38,18 +96,95 @@
             塗り分け
             <select id="paint">
               <option value="population" selected>人口(2020)</option>
+              <option value="density">人口密度</option>
               <option value="region">地方区分</option>
               <option value="plain">単色</option>
             </select>
           </label>
+          <div class="search" role="search">
+            <label class="visually-hidden" for="pref-search">都道府県を探す</label>
+            <input
+              id="pref-search"
+              type="search"
+              autocomplete="off"
+              placeholder="県名・読み・コードで探す"
+              role="combobox"
+              aria-expanded="false"
+              aria-controls="search-results"
+              aria-autocomplete="list"
+            />
+            <ul
+              id="search-results"
+              class="search-results"
+              role="listbox"
+              aria-label="検索結果"
+              hidden
+            ></ul>
+          </div>
+          <button id="export" type="button" class="ghost-button export-button">
+            <svg viewBox="0 0 16 16" aria-hidden="true" class="button-icon">
+              <path
+                d="M8 1.5v8.5M4.5 7 8 10.5 11.5 7"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M2.5 13.5h11"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+            SVGを保存
+          </button>
         </div>
-        <div id="map" class="map"></div>
-        <div id="legend" class="legend"></div>
+
+        <div class="stage">
+          <div class="map-pane">
+            <div id="map" class="map"></div>
+            <div id="legend" class="legend"></div>
+          </div>
+          <aside class="info-pane" aria-label="選択中の都道府県" aria-live="polite">
+            <div id="detail"></div>
+          </aside>
+        </div>
       </section>
 
-      <aside class="info-pane" aria-label="選択中の都道府県" aria-live="polite">
-        <div id="detail"></div>
-      </aside>
+      <section class="usage" data-reveal aria-label="使い方">
+        <div class="section-head">
+          <p class="kicker">Library</p>
+          <h2>コードから使う</h2>
+          <p class="section-lede">
+            描画はDOMに触れない純関数。SVG文字列が欲しいだけなら
+            <code>renderJapanMap</code>、対話が要るなら <code>JapanMap</code> を使う。
+          </p>
+        </div>
+        <div class="snippets">
+          <figure class="snippet">
+            <figcaption>SVG文字列を1行で</figcaption>
+            <pre><code>import { renderJapanMap } from 'nihonmap';
+
+el.innerHTML = renderJapanMap({
+  mode: 'grid',
+  fill: (p) =&gt; p.region === '近畿' ? '#cb8f8f' : null,
+});</code></pre>
+          </figure>
+          <figure class="snippet">
+            <figcaption>選択とホバーを扱う</figcaption>
+            <pre><code>import { JapanMap } from 'nihonmap';
+
+const map = new JapanMap(el, {
+  okinawaInset: true,
+  onSelect: (p) =&gt; show(p?.name),
+});
+map.select(13); // 東京都</code></pre>
+          </figure>
+        </div>
+      </section>
     </main>
 
     <div id="tooltip" class="tooltip" hidden aria-hidden="true"></div>
@@ -57,7 +192,7 @@
     <footer class="site-footer">
       <p>
         境界データはNatural
-        Earth(パブリックドメイン)を簡略化したもの。人口は令和2年国勢調査の確定値(千人単位)。沖ノ鳥島・南鳥島は描画範囲に含めていない。
+        Earth(パブリックドメイン)を簡略化したもの。人口は令和2年国勢調査の確定値(千人単位)、面積は国土地理院の面積調による。沖ノ鳥島・南鳥島は描画範囲に含めていない。
       </p>
     </footer>
 

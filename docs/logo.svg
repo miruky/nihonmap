@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="logo-title">
   <title id="logo-title">nihonmapのロゴ。列島を模した3つの角丸タイル</title>
   <style>
-    :root { --ink: #232b32; --accent: #2f6695; }
+    :root { --ink: #1f262c; --accent: #1f4f7a; }
     @media (prefers-color-scheme: dark) {
-      :root { --ink: #dee4e9; --accent: #6ba3d6; }
+      :root { --ink: #e7e4dc; --accent: #7fb0dd; }
     }
   </style>
   <rect x="68" y="8" width="52" height="52" rx="16" fill="var(--accent, currentColor)"/>
