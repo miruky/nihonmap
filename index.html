@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="依存ゼロの都道府県SVG日本地図ライブラリ nihonmap のデモ" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>nihonmap - 都道府県SVG日本地図</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <svg class="site-logo" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="17" y="2" width="13" height="13" rx="4" class="logo-accent" />
+        <rect x="9" y="11" width="9" height="9" rx="3" fill="currentColor" opacity="0.7" />
+        <rect x="2" y="19" width="11" height="11" rx="3.5" fill="currentColor" opacity="0.4" />
+      </svg>
+      <div>
+        <h1>nihonmap</h1>
+        <p class="tagline">依存ゼロの都道府県SVG日本地図ライブラリ</p>
+      </div>
+      <a class="repo-link" href="https://github.com/miruky/nihonmap" rel="noreferrer">GitHub</a>
+    </header>
+
+    <main class="layout">
+      <section class="map-pane" aria-label="地図">
+        <div class="controls">
+          <div class="segmented" role="group" aria-label="描画モード">
+            <button type="button" data-mode="shape" aria-pressed="true">実形状</button>
+            <button type="button" data-mode="grid" aria-pressed="false">グリッド</button>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="inset" checked />
+            <span class="track" aria-hidden="true"></span>
+            沖縄を別枠に
+          </label>
+          <label class="select-label">
+            塗り分け
+            <select id="paint">
+              <option value="population" selected>人口(2020)</option>
+              <option value="region">地方区分</option>
+              <option value="plain">単色</option>
+            </select>
+          </label>
+        </div>
+        <div id="map" class="map"></div>
+        <div id="legend" class="legend"></div>
+      </section>
+
+      <aside class="info-pane" aria-label="選択中の都道府県" aria-live="polite">
+        <div id="detail"></div>
+      </aside>
+    </main>
+
+    <div id="tooltip" class="tooltip" hidden aria-hidden="true"></div>
+
+    <footer class="site-footer">
+      <p>
+        境界データはNatural
+        Earth(パブリックドメイン)を簡略化したもの。人口は令和2年国勢調査の確定値(千人単位)。沖ノ鳥島・南鳥島は描画範囲に含めていない。
+      </p>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
