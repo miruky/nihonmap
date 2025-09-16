@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="nihonmap">
+  <style>
+    :root { --ink: #232b32; --accent: #2f6695; }
+    @media (prefers-color-scheme: dark) {
+      :root { --ink: #dee4e9; --accent: #6ba3d6; }
+    }
+  </style>
+  <rect x="17" y="2" width="13" height="13" rx="4" fill="var(--accent, currentColor)"/>
+  <rect x="9" y="11" width="9" height="9" rx="3" fill="var(--ink, currentColor)" opacity="0.7"/>
+  <rect x="2" y="19" width="11" height="11" rx="3.5" fill="var(--ink, currentColor)" opacity="0.4"/>
+</svg>
